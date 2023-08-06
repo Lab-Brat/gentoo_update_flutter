@@ -33,7 +33,7 @@ class _AppState extends State<App> {
           );
         }
 
-        return const Text('loading');
+        return const Text('loading', textDirection: TextDirection.ltr);
       },
     );
   }
