@@ -1,16 +1,12 @@
-# gentoo_update_flutter
+# gentoo_update Mobile App
 
-A new Flutter project.
+This repository is an Android mobile app that receives update reports  
+from [gentoo_update](https://github.com/Lab-Brat/gentoo_update).  
 
-## Getting Started
+This project 
+[originates](https://wiki.gentoo.org/wiki/Google_Summer_of_Code/2023/Ideas/Automated_Gentoo_system_updater) 
+from 2023 Google Summer of Code, more about it can be found in the 
+[blog post](https://labbrat.net/blog/gsoc2023/gentoo_update_intro/) and 
+[Gentoo Forums](https://forums.gentoo.org/viewtopic-p-8793827.html#8793827).  
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
