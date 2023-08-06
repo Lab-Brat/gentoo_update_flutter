@@ -10,13 +10,18 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: ElevatedButton(
-          child: const Text('Sign Out'),
-          onPressed: () async {
-            await AuthService().signOut();
-            Navigator.of(context)
-                .pushNamedAndRemoveUntil('/', (route) => false);
-          }),
+      body: Column(
+        children: [
+          Text("Your UID: ${AuthService.uid}"),
+          ElevatedButton(
+              child: const Text('Sign Out'),
+              onPressed: () async {
+                await AuthService().signOut();
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/', (route) => false);
+              }),
+        ],
+      ),
     );
   }
 }

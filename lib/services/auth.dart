@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
-  final user = FirebaseAuth.instance.currentUser;
+  static User? user = FirebaseAuth.instance.currentUser;
+  static String uid = _getUID(user);
 
   Future<void> anonLogin() async {
     try {
@@ -14,5 +15,14 @@ class AuthService {
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+}
+
+String _getUID(User? user) {
+  if (user != null) {
+    return user.uid;
+  } else {
+    String err = "TOKEN_NOT_FOUND";
+    return err;
   }
 }
