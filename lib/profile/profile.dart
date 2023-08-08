@@ -6,21 +6,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
+  Future<String?> getToken(String uid) async {
+    DocumentSnapshot document =
+        await FirebaseFirestore.instance.collection('tokens').doc(uid).get();
+    return document['token_id'];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final uid = AuthService.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16.0),
-        itemCount: 2,
+        itemCount: 3,
         separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
-              return Text("Your UID: ${AuthService.uid}");
+              print(uid);
+              return Text("Your UID: $uid");
             case 1:
+              return FutureBuilder<String?>(
+                future: getToken(uid),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text("Error fetching token");
+                  } else {
+                    return Text("Your Token: ${snapshot.data}");
+                  }
+                },
+              );
+            case 2:
               return ElevatedButton(
                 child: const Text('Sign Out'),
                 onPressed: () async {
