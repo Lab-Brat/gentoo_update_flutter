@@ -45,11 +45,27 @@ class ProfileScreen extends StatelessWidget {
                 future: getToken(uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
-                    return const Text("Error fetching token");
+                    return Text("Error fetching token");
                   } else {
-                    return Text("Your Token: ${snapshot.data}");
+                    return Row(
+                      children: [
+                        Expanded(child: Text("Your Token: ${snapshot.data}")),
+                        IconButton(
+                          icon: Icon(Icons.copy),
+                          onPressed: () {
+                            Clipboard.setData(
+                              ClipboardData(text: snapshot.data ?? ''),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Token copied to clipboard')),
+                            );
+                          },
+                        ),
+                      ],
+                    );
                   }
                 },
               );
