@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gentoo_update_flutter/services/auth.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -26,16 +26,28 @@ class ProfileScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
-              print(uid);
-              return Text("Your UID: $uid");
+              return Row(
+                children: [
+                  Expanded(child: Text("Your UID: $uid")),
+                  IconButton(
+                    icon: Icon(Icons.copy),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: uid));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('UID copied to clipboard')),
+                      );
+                    },
+                  ),
+                ],
+              );
             case 1:
               return FutureBuilder<String?>(
                 future: getToken(uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
-                    return Text("Error fetching token");
+                    return const Text("Error fetching token");
                   } else {
                     return Text("Your Token: ${snapshot.data}");
                   }
