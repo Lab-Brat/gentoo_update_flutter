@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gentoo_update_flutter/services/auth.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,8 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: Column(
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
         children: [
           Text("Your UID: ${AuthService.uid}"),
           ElevatedButton(
