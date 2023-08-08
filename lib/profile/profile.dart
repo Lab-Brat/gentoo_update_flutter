@@ -12,18 +12,27 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: ListView(
+      body: ListView.separated(
         padding: const EdgeInsets.all(16.0),
-        children: [
-          Text("Your UID: ${AuthService.uid}"),
-          ElevatedButton(
-              child: const Text('Sign Out'),
-              onPressed: () async {
-                await AuthService().signOut();
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/', (route) => false);
-              }),
-        ],
+        itemCount: 2,
+        separatorBuilder: (context, index) => Divider(),
+        itemBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return Text("Your UID: ${AuthService.uid}");
+            case 1:
+              return ElevatedButton(
+                child: const Text('Sign Out'),
+                onPressed: () async {
+                  await AuthService().signOut();
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/', (route) => false);
+                },
+              );
+            default:
+              return Container();
+          }
+        },
       ),
     );
   }
