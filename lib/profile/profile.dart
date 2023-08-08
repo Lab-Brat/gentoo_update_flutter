@@ -30,11 +30,12 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   Expanded(child: Text("Your UID: $uid")),
                   IconButton(
-                    icon: Icon(Icons.copy),
+                    icon: const Icon(Icons.copy),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: uid));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('UID copied to clipboard')),
+                        const SnackBar(
+                            content: Text('UID copied to clipboard')),
                       );
                     },
                   ),
@@ -45,21 +46,21 @@ class ProfileScreen extends StatelessWidget {
                 future: getToken(uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
-                    return Text("Error fetching token");
+                    return const Text("Error fetching token");
                   } else {
                     return Row(
                       children: [
                         Expanded(child: Text("Your Token: ${snapshot.data}")),
                         IconButton(
-                          icon: Icon(Icons.copy),
+                          icon: const Icon(Icons.copy),
                           onPressed: () {
                             Clipboard.setData(
                               ClipboardData(text: snapshot.data ?? ''),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                   content: Text('Token copied to clipboard')),
                             );
                           },
