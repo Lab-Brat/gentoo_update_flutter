@@ -22,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.all(16.0),
         itemCount: 3,
-        separatorBuilder: (context, index) => Divider(),
+        separatorBuilder: (context, index) => const Divider(),
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
@@ -61,7 +61,8 @@ class ProfileScreen extends StatelessWidget {
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Token copied to clipboard')),
+                                content: Text('Token copied to clipboard'),
+                              ),
                             );
                           },
                         ),
