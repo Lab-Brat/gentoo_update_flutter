@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen({Key? key}) : super(key: key);
+  final AuthService authService = AuthService();
 
   Future<String?> getToken(String uid) async {
     DocumentSnapshot document =
@@ -14,7 +15,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uid = AuthService.uid;
+    final uid = authService.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),

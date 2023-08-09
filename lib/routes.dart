@@ -6,8 +6,8 @@ import 'package:gentoo_update_flutter/reports/reports.dart';
 
 var appRoutes = {
   '/': (context) => const HomeScreen(),
-  '/login': (context) => const LoginScreen(),
-  '/profile': (context) => const ProfileScreen(),
-  '/reports': (context) => const ReportsScreen(),
+  '/login': (context) => LoginScreen(),
+  '/profile': (context) => ProfileScreen(),
+  '/reports': (context) => ReportsScreen(),
   '/about': (context) => const AboutScreen(),
 };

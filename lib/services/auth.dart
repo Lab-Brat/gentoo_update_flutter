@@ -4,8 +4,10 @@ import 'dart:math';
 
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
-  static User? user = FirebaseAuth.instance.currentUser;
-  static String uid = _getUID(user);
+
+  String get uid {
+    return FirebaseAuth.instance.currentUser?.uid ?? "Not Logged In";
+  }
 
   Future<void> anonLogin() async {
     try {
@@ -32,14 +34,14 @@ class AuthService {
   }
 }
 
-String _getUID(User? user) {
-  if (user != null) {
-    return user.uid;
-  } else {
-    String err = "TOKEN_NOT_FOUND";
-    return err;
-  }
-}
+// String _getUID(User? user) {
+//   if (user != null) {
+//     return user.uid;
+//   } else {
+//     String err = "TOKEN_NOT_FOUND";
+//     return err;
+//   }
+// }
 
 String _generateToken() {
   const chars =
