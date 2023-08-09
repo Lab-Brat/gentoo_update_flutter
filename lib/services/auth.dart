@@ -42,15 +42,15 @@ String _getUID(User? user) {
 }
 
 String _generateToken() {
-  const _chars =
+  const chars =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  Random _rnd = Random();
+  Random random = Random.secure();
 
   return String.fromCharCodes(
     Iterable.generate(
       20,
-      (_) => _chars.codeUnitAt(
-        _rnd.nextInt(_chars.length),
+      (_) => chars.codeUnitAt(
+        random.nextInt(chars.length),
       ),
     ),
   );
