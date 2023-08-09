@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
 
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
@@ -8,6 +10,18 @@ class AuthService {
   Future<void> anonLogin() async {
     try {
       await FirebaseAuth.instance.signInAnonymously();
+
+      String token = _generateToken();
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('tokens')
+            .doc(user.uid)
+            .set({
+          'token_id': token,
+        });
+      }
     } on FirebaseAuthException catch (e) {
       print(e);
     }
@@ -25,4 +39,19 @@ String _getUID(User? user) {
     String err = "TOKEN_NOT_FOUND";
     return err;
   }
+}
+
+String _generateToken() {
+  const _chars =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  Random _rnd = Random();
+
+  return String.fromCharCodes(
+    Iterable.generate(
+      20,
+      (_) => _chars.codeUnitAt(
+        _rnd.nextInt(_chars.length),
+      ),
+    ),
+  );
 }
