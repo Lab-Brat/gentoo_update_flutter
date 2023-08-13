@@ -17,11 +17,16 @@ class AuthService {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
+        final currentTime = Timestamp.now();
+
         await FirebaseFirestore.instance
             .collection('tokens')
             .doc(user.uid)
             .set({
           'token_id': token,
+          'create_date': currentTime,
+          'last_used': currentTime,
+          'use_times': 1,
         });
       }
     } on FirebaseAuthException catch (e) {
@@ -33,15 +38,6 @@ class AuthService {
     await FirebaseAuth.instance.signOut();
   }
 }
-
-// String _getUID(User? user) {
-//   if (user != null) {
-//     return user.uid;
-//   } else {
-//     String err = "TOKEN_NOT_FOUND";
-//     return err;
-//   }
-// }
 
 String _generateToken() {
   const chars =
