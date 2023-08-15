@@ -25,6 +25,9 @@ exports.checkTokenAndForwardData = functions.https.onRequest(
 
       const tokensRef = db.collection("tokens").doc(token);
       const tokenDoc = await tokensRef.get();
+      const updateStatus = req.query.update_status;
+      const updateContent = req.query.update_content;
+
 
       if (!tokenDoc.exists) {
         res.status(404).send("Token not found");
@@ -52,6 +55,27 @@ exports.checkTokenAndForwardData = functions.https.onRequest(
         "last_used": currentTime,
         "use_times": requestCount + 1,
       });
+
+      const fcmToken = tokenData.fcm_token;
+      if (fcmToken) {
+        const message = {
+          notification: {
+            title: `Update Status: ${updateStatus}`,
+            body: updateContent,
+          },
+          token: fcmToken,
+        };
+
+        try {
+          const response = await admin.messaging().send(message);
+          console.log("Successfully sent message:", response);
+        } catch (error) {
+          console.log("Error sending message:", error);
+        }
+      } else {
+        console.log("No FCM token found for this user.");
+      }
+
 
       res.status(200).send("Data forwarded successfully");
     });
