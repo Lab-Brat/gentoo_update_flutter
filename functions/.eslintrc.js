@@ -14,6 +14,18 @@ module.exports = {
     "no-restricted-globals": ["error", "name", "length"],
     "prefer-arrow-callback": "error",
     "quotes": ["error", "double", {"allowTemplateLiterals": true}],
+    "require-jsdoc": [
+      "error",
+      {
+        require: {
+          FunctionDeclaration: false,
+          MethodDefinition: false,
+          ClassDeclaration: false,
+          ArrowFunctionExpression: false,
+          FunctionExpression: false,
+        },
+      },
+    ],
   },
   overrides: [
     {
@@ -21,7 +33,6 @@ module.exports = {
       env: {
         mocha: true,
       },
-      rules: {},
     },
   ],
   globals: {},
