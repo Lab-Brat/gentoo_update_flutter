@@ -2,22 +2,12 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  	// Deny All
-  	match /{document=**} {
-      allow read, write: if false;
-    }
-    
-    // Match documents in token collection
     match /tokens/{userId} {
-      // Allow read and write only if the request's user ID matches the document ID
-      allow read, write: if request.auth != null 
-                         && request.auth.uid == userId;
+      // allow users only to read their own documents
+      allow read: if request.auth.uid == userId;
 
-      // Allow create only if the document does not already exist
-      allow create: if request.auth != null 
-                    && request.auth.uid == userId 
-                    && !exists(/databases/$(database)/documents/tokens/$(userId));
+      // disable write for all users
+      allow write: if false;
     }
-    
   }
 }
