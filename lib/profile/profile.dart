@@ -36,7 +36,8 @@ class ProfileScreen extends StatelessWidget {
                       Clipboard.setData(ClipboardData(text: uid));
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('UID copied to clipboard')),
+                          content: Text('UID copied to clipboard'),
+                        ),
                       );
                     },
                   ),

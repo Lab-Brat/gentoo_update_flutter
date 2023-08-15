@@ -2,8 +2,10 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 
 admin.initializeApp();
-
 const db = admin.firestore();
+
+const addNewUser = require("./src/addNewUser");
+exports.addNewUser = functions.auth.user().onCreate(addNewUser);
 
 exports.checkTokenAndForwardData = functions.https.onRequest(
     async (req, res) => {
@@ -34,7 +36,7 @@ exports.checkTokenAndForwardData = functions.https.onRequest(
       if (lastUsed) {
         const timeDiff = (
           currentTime - new Date(lastUsed._seconds * 1000)) /
-                (1000 * 60 * 60 * 24);
+        (1000 * 60 * 60 * 24);
         if (timeDiff >= 1) {
           requestCount = 0;
         } else if (requestCount >= 5) {
