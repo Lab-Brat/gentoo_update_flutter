@@ -2,14 +2,14 @@ const admin = require("firebase-admin");
 const db = admin.firestore();
 
 const verifyToken = async (token) => {
-  const tokensRef = db.collection("tokens").doc(token);
-  const tokenDoc = await tokensRef.get();
+  const tokensRef = db.collection("tokens");
+  const snapshot = await tokensRef.where("token_id", "==", token).get();
 
-  if (!tokenDoc.exists) {
+  if (snapshot.empty) {
     throw new Error("Token not found");
   }
 
-  return tokenDoc;
+  return snapshot.docs[0];
 };
 
 module.exports = verifyToken;
