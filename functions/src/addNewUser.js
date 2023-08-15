@@ -14,6 +14,8 @@ module.exports = (user) => {
     create_date: currentTime,
     last_used: currentTime,
     use_times: 1,
+    fcm_token: "",
+    fcm_token_create_time: null,
   };
 
   return admin.firestore().collection("tokens").doc(user.uid).set(data);

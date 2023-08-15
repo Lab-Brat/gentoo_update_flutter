@@ -7,6 +7,9 @@ const db = admin.firestore();
 const addNewUser = require("./src/addNewUser");
 exports.addNewUser = functions.auth.user().onCreate(addNewUser);
 
+const updateFCMToken = require("./src/updateFCMToken");
+exports.updateFCMToken = functions.https.onRequest(updateFCMToken);
+
 exports.checkTokenAndForwardData = functions.https.onRequest(
     async (req, res) => {
       if (req.method !== "POST") {
