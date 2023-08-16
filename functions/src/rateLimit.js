@@ -6,11 +6,11 @@ const rateLimit = async (tokenDoc) => {
 
   if (lastUsed) {
     const timeDiff = (currentTime -
-            new Date(lastUsed._seconds * 1000)) /
-            (1000 * 60 * 60 * 24);
+      new Date(lastUsed._seconds * 1000)) /
+      (1000 * 60 * 60 * 24);
     if (timeDiff >= 1) {
       requestCount = 0;
-    } else if (requestCount >= 5) {
+    } else if (requestCount >= 11) {
       throw new Error("Rate limit exceeded");
     }
   }
