@@ -9,5 +9,10 @@ service cloud.firestore {
       // disable write for all users
       allow write: if false;
     }
+
+    match /reports/{userId}/{document=**} {
+      // allow users only to read their own documents
+      allow read: if request.auth.uid == userId;
+    }
   }
 }
