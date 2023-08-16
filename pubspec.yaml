@@ -27,6 +27,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - "assets/gentoo_logo.ico"
 
 flutter_launcher_icons:
   android: true

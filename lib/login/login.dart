@@ -17,8 +17,8 @@ class LoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const FlutterLogo(
-                size: 150,
+              const Image(
+                image: AssetImage("assets/gentoo_logo.ico"),
               ),
               Flexible(
                   child: LoginButton(
