@@ -20,9 +20,9 @@ exports.checkTokenAndForwardData = functions.https.onRequest(
           return;
         }
 
-        const token = req.query.token;
-        const updateStatus = req.query.update_status;
-        const updateContent = req.query.update_content;
+        const token = req.body.token;
+        const updateStatus = req.body.update_status;
+        const updateContent = req.body.update_content;
 
         if (!token) {
           res.status(400).send("Token not provided");

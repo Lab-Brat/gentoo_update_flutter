@@ -14,10 +14,23 @@ const forwardData = async (tokenDoc, updateStatus, updateContent) => {
     const fcmTokenData = fcmTokenDoc.data();
     const token = fcmTokenData.fcmToken;
 
+    const userReportsRef = admin.firestore()
+        .collection("reports")
+        .doc(tokenDoc.id)
+        .collection("user_reports");
+
+    const newReportRef = await userReportsRef.add({
+      create_date: admin.firestore.FieldValue.serverTimestamp(),
+      report_status: updateStatus,
+      report_content: updateContent,
+    });
+
+    console.log("Report stored with ID:", newReportRef.id);
+
     const message = {
       notification: {
-        title: `Update Status: ${updateStatus}`,
-        body: updateContent,
+        title: "New Report Available",
+        body: `Update Status: ${updateStatus}`,
       },
       token: token,
     };
@@ -25,7 +38,7 @@ const forwardData = async (tokenDoc, updateStatus, updateContent) => {
     const response = await admin.messaging().send(message);
     console.log("Successfully sent message to: " + tokenDoc.id, response);
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error("Error in forwardData:", error);
   }
 };
 
