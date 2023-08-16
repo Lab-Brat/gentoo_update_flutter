@@ -14,12 +14,12 @@ const updateFCMToken = async (req, res) => {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const uid = decodedToken.uid;
 
-    const userRef = admin.firestore().collection("tokens").doc(uid);
+    const fcmTokenRef = admin.firestore().collection("fcmTokens").doc(uid);
 
-    await userRef.update({
-      "fcm_token": fcmToken,
+    await fcmTokenRef.set({
+      "fcmToken": fcmToken,
       "fcm_token_create_time": admin.firestore.FieldValue.serverTimestamp(),
-    });
+    }, {merge: true});
 
     res.status(200).send("FCM token updated successfully.");
   } catch (error) {
@@ -29,3 +29,4 @@ const updateFCMToken = async (req, res) => {
 };
 
 module.exports = updateFCMToken;
+
