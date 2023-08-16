@@ -75,12 +75,15 @@ class ProfileScreen extends StatelessWidget {
               );
             case 2:
               return ElevatedButton(
-                child: const Text('Sign Out'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurpleAccent,
+                ),
                 onPressed: () async {
                   await AuthService().signOut();
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil('/', (route) => false);
                 },
+                child: const Text('Sign Out'),
               );
             default:
               return Container();

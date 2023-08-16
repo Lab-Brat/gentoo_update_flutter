@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gentoo_update_flutter/services/auth.dart';
@@ -23,9 +25,9 @@ class LoginScreen extends StatelessWidget {
               Flexible(
                   child: LoginButton(
                 text: 'Anonymous Login',
-                icon: FontAwesomeIcons.userNinja,
+                icon: FontAwesomeIcons.userAstronaut,
                 loginMethod: AuthService().anonLogin,
-                color: Colors.deepPurple,
+                color: Colors.deepPurpleAccent,
               ))
             ],
           )),
@@ -52,7 +54,7 @@ class LoginButton extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: ElevatedButton.icon(
-        label: const Text("login_button"),
+        label: const Text("Anonymous Login"),
         icon: Icon(
           icon,
           color: Colors.white,
