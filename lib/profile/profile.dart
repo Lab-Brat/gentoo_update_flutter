@@ -27,22 +27,7 @@ class ProfileScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
-              return Row(
-                children: [
-                  Expanded(child: Text("Your UID: $uid")),
-                  IconButton(
-                    icon: const Icon(Icons.copy),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: uid));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('UID copied to clipboard'),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              );
+              return Text("Your UID: $uid");
             case 1:
               return FutureBuilder<String?>(
                 future: getToken(uid),
