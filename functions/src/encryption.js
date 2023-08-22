@@ -24,6 +24,10 @@ function encryptWithMasterKey(data) {
 }
 
 function decryptWithMasterKey(encrypted) {
+  if (!encrypted || !encrypted.iv || !encrypted.tag || !encrypted.content) {
+    throw new Error("Invalid or incomplete encrypted data provided.");
+  }
+
   const decipher = crypto.createDecipheriv(
       "aes-256-gcm",
       Buffer.from(MASTER_KEY, "hex"),
