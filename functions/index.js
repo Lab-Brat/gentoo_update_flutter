@@ -9,6 +9,9 @@ exports.addNewUser = functions.auth.user().onCreate(addNewUser);
 const updateFCMToken = require("./src/updateFCMToken");
 exports.updateFCMToken = functions.https.onRequest(updateFCMToken);
 
+const getUserAESKey = require("./src/getUserAESKey");
+exports.getUserAESKey = functions.https.onCall(getUserAESKey);
+
 const forwardData = require("./src/forwardData");
 const verifyToken = require("./src/verifyToken");
 const rateLimit = require("./src/rateLimit");
