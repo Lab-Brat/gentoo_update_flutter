@@ -12,6 +12,7 @@ exports.updateFCMToken = functions.https.onRequest(updateFCMToken);
 const forwardData = require("./src/forwardData");
 const verifyToken = require("./src/verifyToken");
 const rateLimit = require("./src/rateLimit");
+const encryption = require("./src/encryption");
 exports.checkTokenAndForwardData = functions.https.onRequest(
     async (req, res) => {
       try {
@@ -20,9 +21,9 @@ exports.checkTokenAndForwardData = functions.https.onRequest(
           return;
         }
 
-        const token = req.body.token;
+        const token = encryption.encrypt(req.body.token);
         const updateStatus = req.body.update_status;
-        const updateContent = req.body.update_content;
+        const updateContent = encryption.encrypt(req.body.update_content);
 
         if (!token) {
           res.status(400).send("Token not provided");

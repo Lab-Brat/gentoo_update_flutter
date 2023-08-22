@@ -1,8 +1,9 @@
 const admin = require("firebase-admin");
 const crypto = require("crypto");
+const encryption = require("./encryption");
 
 function generateToken() {
-  return crypto.randomBytes(10).toString("hex");
+  return crypto.randomBytes(6).toString("hex");
 }
 
 module.exports = (user) => {
@@ -10,7 +11,7 @@ module.exports = (user) => {
   const tokenId = generateToken();
 
   const data = {
-    token_id: tokenId,
+    token_id: encryption.encrypt(tokenId),
     create_date: currentTime,
     last_used: currentTime,
     use_times: 1,
