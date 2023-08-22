@@ -3,6 +3,7 @@ const functions = require("firebase-functions");
 const crypto = require("crypto");
 
 const MASTER_KEY = functions.config().encryption.key;
+console.log(MASTER_KEY);
 
 function encryptWithMasterKey(data) {
   const nonce = crypto.randomBytes(12);
@@ -24,10 +25,6 @@ function encryptWithMasterKey(data) {
 }
 
 function decryptWithMasterKey(encrypted) {
-  if (!encrypted || !encrypted.iv || !encrypted.tag || !encrypted.content) {
-    throw new Error("Invalid or incomplete encrypted data provided.");
-  }
-
   const decipher = crypto.createDecipheriv(
       "aes-256-gcm",
       Buffer.from(MASTER_KEY, "hex"),
@@ -56,7 +53,7 @@ function encryptWithUserKey(userKey, data) {
   const nonce = crypto.randomBytes(12);
   const cipher = crypto.createCipheriv(
       "aes-256-gcm",
-      Buffer.from(userKey, "utf8"),
+      Buffer.from(userKey, "hex"),
       nonce);
 
   let encrypted = cipher.update(data, "utf8", "hex");
@@ -74,7 +71,7 @@ function encryptWithUserKey(userKey, data) {
 function decryptWithUserKey(userKey, encrypted) {
   const decipher = crypto.createDecipheriv(
       "aes-256-gcm",
-      Buffer.from(userKey, "utf8"),
+      Buffer.from(userKey, "hex"),
       Buffer.from(encrypted.iv, "hex"));
   decipher.setAuthTag(Buffer.from(encrypted.tag, "hex"));
 

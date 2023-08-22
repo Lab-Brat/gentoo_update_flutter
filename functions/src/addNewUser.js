@@ -3,11 +3,11 @@ const encryption = require("./encryption");
 const crypto = require("crypto");
 
 function generateToken() {
-  return crypto.randomBytes(6).toString("hex");
+  return crypto.randomBytes(4).toString("hex");
 }
 
 function generateUserAESKey() {
-  return crypto.randomBytes(32);
+  return crypto.randomBytes(32).toString("hex");
 }
 
 module.exports = async (user) => {
@@ -15,6 +15,9 @@ module.exports = async (user) => {
     const currentTime = admin.firestore.Timestamp.now();
     const tokenId = generateToken();
     const userAESKey = generateUserAESKey();
+    console.log("Original User Info:");
+    console.log(userAESKey);
+    console.log(tokenId);
 
     const encryptedUserAESKey = encryption.encryptWithMasterKey(userAESKey);
 

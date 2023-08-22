@@ -27,19 +27,13 @@ const getUserAESKey = async (data, context) => {
         "data-missing", "user_aes_key field missing for user.");
   }
 
-  if (!userAESKey.content || !userAESKey.iv || !userAESKey.tag) {
-    console.error(
-        "One of the required fields in user_aes_key is missing for user",
-        authenticatedUID);
-    throw new functions.https.HttpsError(
-        "data-missing", "Required fields in user_aes_key missing.");
-  }
-
   console.log("userAESKey.content:", userAESKey.content);
-  const decryptedContent = encryption.decryptWithMasterKey(userAESKey);
+  console.log(Buffer.from(
+      encryption.decryptWithMasterKey(userAESKey)).toString("utf8"));
 
   const response = {
-    content: decryptedContent,
+    content: Buffer.from(
+        encryption.decryptWithMasterKey(userAESKey)).toString("utf8"),
     iv: userAESKey.iv,
     tag: userAESKey.tag,
   };
