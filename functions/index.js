@@ -13,6 +13,7 @@ const forwardData = require("./src/forwardData");
 const verifyToken = require("./src/verifyToken");
 const rateLimit = require("./src/rateLimit");
 const encryption = require("./src/encryption");
+
 exports.checkTokenAndForwardData = functions.https.onRequest(
     async (req, res) => {
       try {
@@ -21,19 +22,27 @@ exports.checkTokenAndForwardData = functions.https.onRequest(
           return;
         }
 
-        const token = encryption.encrypt(req.body.token);
-        const updateStatus = req.body.update_status;
-        const updateContent = encryption.encrypt(req.body.update_content);
+        const encryptedToken = req.body.token;
+        const UpdateStatus = req.body.update_status;
+        const UpdateContent = req.body.update_content;
 
-        if (!token) {
+        if (!encryptedToken) {
           res.status(400).send("Token not provided");
           return;
         }
 
-        const tokenDoc = await verifyToken(token);
+        const tokenDoc = await verifyToken(encryptedToken);
+        const userKeyEncrypted = tokenDoc.data().user_aes_key;
+        const userKey = encryption.decryptWithMasterKey(userKeyEncrypted);
+
+        const encryptedUpdateContent = encryption.encryptWithUserKey(
+            userKey, JSON.stringify(UpdateContent)).content;
 
         await rateLimit(tokenDoc);
-        await forwardData(tokenDoc, updateStatus, updateContent);
+        await forwardData(
+            tokenDoc,
+            UpdateStatus,
+            encryptedUpdateContent);
 
         res.status(200).send("Data forwarded successfully");
       } catch (error) {
