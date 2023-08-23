@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gentoo_update_flutter/services/auth.dart';
 import 'package:gentoo_update_flutter/services/decrypt.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -54,10 +55,29 @@ class ProfileScreen extends StatelessWidget {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return Text('Your Token: ${snapshot.data}');
+                    return Row(
+                      children: <Widget>[
+                        Expanded(child: Text('Your Token: ${snapshot.data}')),
+                        IconButton(
+                          icon: const Icon(Icons.copy, color: Colors.grey),
+                          onPressed: () {
+                            if (snapshot.data != null) {
+                              Clipboard.setData(
+                                  ClipboardData(text: snapshot.data!));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Token copied to clipboard!'),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    );
                   }
                 },
               );
+
             case 2:
               return ElevatedButton(
                 style: ElevatedButton.styleFrom(
