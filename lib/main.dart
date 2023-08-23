@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gentoo_update_flutter/routes.dart';
 import 'package:gentoo_update_flutter/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:gentoo_update_flutter/shared/provider.dart';
 
 void main() {
   runApp(const App());
@@ -27,9 +29,12 @@ class _AppState extends State<App> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp(
-            routes: appRoutes,
-            theme: appTheme,
+          return ChangeNotifierProvider(
+            create: (context) => UserKeyProvider(),
+            child: MaterialApp(
+              routes: appRoutes,
+              theme: appTheme,
+            ),
           );
         }
 
