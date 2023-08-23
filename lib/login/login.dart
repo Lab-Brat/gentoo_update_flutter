@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gentoo_update_flutter/services/auth.dart';
+// import 'package:provider/provider.dart';
+// import 'package:gentoo_update_flutter/shared/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -24,7 +26,7 @@ class LoginScreen extends StatelessWidget {
                   child: LoginButton(
                 text: 'Anonymous Login',
                 icon: FontAwesomeIcons.userAstronaut,
-                loginMethod: AuthService().anonLogin,
+                loginMethod: () => AuthService().anonLogin(),
                 color: Colors.deepPurpleAccent,
               ))
             ],

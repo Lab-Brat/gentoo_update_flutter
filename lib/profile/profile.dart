@@ -3,12 +3,13 @@ import 'package:gentoo_update_flutter/services/auth.dart';
 import 'package:gentoo_update_flutter/services/decrypt.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:gentoo_update_flutter/shared/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
   final AuthService authService = AuthService();
   final Decryption decrypt = Decryption();
-  final AESKeyManager aesKeyManager = AESKeyManager();
 
   Future<List<String?>> getTokenInfo(String uid) async {
     DocumentSnapshot document =
@@ -16,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
     return [document['token_id'], document['token_id_iv']];
   }
 
-  Future<String> getDecryptedToken(String uid) async {
+  Future<String> getDecryptedToken(String uid, String decryptedAESKey) async {
     List<String?> tokenInfo = await getTokenInfo(uid);
     String? encryptedTokenId = tokenInfo[0];
     String tokenIV = tokenInfo[1] ?? "";
@@ -25,14 +26,16 @@ class ProfileScreen extends StatelessWidget {
       throw Exception("Token not found");
     }
 
-    UserAESKey userAESKey = await AESKeyManager().fetchUserAESKey();
     return Decryption()
-        .decryptWithUserKey(encryptedTokenId, userAESKey.content, tokenIV);
+        .decryptWithUserKey(encryptedTokenId, decryptedAESKey, tokenIV);
   }
 
   @override
   Widget build(BuildContext context) {
     final uid = authService.uid;
+    final userKey = Provider.of<UserKeyProvider>(context).userKey;
+    print(userKey);
+    print(uid);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -47,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
               return Text("Your UID: $uid");
             case 1:
               return FutureBuilder<String>(
-                future: getDecryptedToken(uid),
+                future: getDecryptedToken(uid, userKey),
                 builder:
                     (BuildContext context, AsyncSnapshot<String> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

@@ -6,7 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:gentoo_update_flutter/shared/provider.dart';
 
 void main() {
-  runApp(const App());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserKeyProvider(),
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatefulWidget {
