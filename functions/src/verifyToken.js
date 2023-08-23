@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 const encryption = require("./encryption");
 const db = admin.firestore();
 
-const verifyToken = async (encryptedToken) => {
+const verifyToken = async (tokenID) => {
   const tokensRef = db.collection("tokens");
   const allTokensSnapshot = await tokensRef.get();
 
@@ -12,13 +12,18 @@ const verifyToken = async (encryptedToken) => {
 
   for (const doc of allTokensSnapshot.docs) {
     const userData = doc.data();
-    const userKey = await Buffer.from(
-        encryption.fetchUserAESKey(doc.id), "hex");
-    const decryptedTokenId = encryption.decryptWithUserKey(
-        userKey,
-        userData.token_id);
+    const userAESKey = userData.user_aes_key;
+    const decryptedAESKey = encryption.decryptWithMasterKey(userAESKey);
 
-    if (decryptedTokenId === encryptedToken) {
+    const tokenIDIV = {
+      iv: userData.token_id_iv,
+      content: userData.token_id,
+    };
+    const decryptedTokenId = encryption.decryptWithUserKey(
+        decryptedAESKey,
+        tokenIDIV);
+
+    if (decryptedTokenId === tokenID) {
       return doc;
     }
   }
