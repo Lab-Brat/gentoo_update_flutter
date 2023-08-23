@@ -15,14 +15,13 @@ module.exports = async (user) => {
     const currentTime = admin.firestore.Timestamp.now();
     const tokenId = generateToken();
     const userAESKey = generateUserAESKey();
-    console.log("Original User Info:");
-    console.log(userAESKey);
-    console.log(tokenId);
 
+    const encryptedToken = encryption.encryptWithUserKey(userAESKey, tokenId);
     const encryptedUserAESKey = encryption.encryptWithMasterKey(userAESKey);
 
     const data = {
-      token_id: encryption.encryptWithUserKey(userAESKey, tokenId).content,
+      token_id: encryptedToken.content,
+      token_id_iv: encryptedToken.iv,
       create_date: currentTime,
       last_used: currentTime,
       use_times: 1,

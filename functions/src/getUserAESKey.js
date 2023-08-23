@@ -27,15 +27,10 @@ const getUserAESKey = async (data, context) => {
         "data-missing", "user_aes_key field missing for user.");
   }
 
-  console.log("userAESKey.content:", userAESKey.content);
-  console.log(Buffer.from(
-      encryption.decryptWithMasterKey(userAESKey)).toString("utf8"));
-
   const response = {
     content: Buffer.from(
         encryption.decryptWithMasterKey(userAESKey)).toString("utf8"),
     iv: userAESKey.iv,
-    tag: userAESKey.tag,
   };
   return response;
 };

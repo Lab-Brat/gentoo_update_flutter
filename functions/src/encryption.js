@@ -3,39 +3,35 @@ const functions = require("firebase-functions");
 const crypto = require("crypto");
 
 const MASTER_KEY = functions.config().encryption.key;
-console.log(MASTER_KEY);
 
 function encryptWithMasterKey(data) {
-  const nonce = crypto.randomBytes(12);
+  const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(
-      "aes-256-gcm",
+      "aes-256-cbc",
       Buffer.from(MASTER_KEY, "hex"),
-      nonce);
+      iv);
 
   let encrypted = cipher.update(data, "utf8", "hex");
   encrypted += cipher.final("hex");
 
-  const tag = cipher.getAuthTag();
-
   return {
-    iv: nonce.toString("hex"),
+    iv: iv.toString("hex"),
     content: encrypted,
-    tag: tag.toString("hex"),
   };
 }
 
 function decryptWithMasterKey(encrypted) {
   const decipher = crypto.createDecipheriv(
-      "aes-256-gcm",
+      "aes-256-cbc",
       Buffer.from(MASTER_KEY, "hex"),
       Buffer.from(encrypted.iv, "hex"));
-  decipher.setAuthTag(Buffer.from(encrypted.tag, "hex"));
 
   let decrypted = decipher.update(encrypted.content, "hex", "utf8");
   decrypted += decipher.final("utf8");
 
   return decrypted;
 }
+
 
 async function fetchUserAESKey(userId) {
   const userDoc = await admin.firestore()
@@ -50,30 +46,26 @@ async function fetchUserAESKey(userId) {
 }
 
 function encryptWithUserKey(userKey, data) {
-  const nonce = crypto.randomBytes(12);
+  const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(
-      "aes-256-gcm",
+      "aes-256-cbc",
       Buffer.from(userKey, "hex"),
-      nonce);
+      iv);
 
   let encrypted = cipher.update(data, "utf8", "hex");
   encrypted += cipher.final("hex");
 
-  const tag = cipher.getAuthTag();
-
   return {
-    iv: nonce.toString("hex"),
+    iv: iv.toString("hex"),
     content: encrypted,
-    tag: tag.toString("hex"),
   };
 }
 
 function decryptWithUserKey(userKey, encrypted) {
   const decipher = crypto.createDecipheriv(
-      "aes-256-gcm",
+      "aes-256-cbc",
       Buffer.from(userKey, "hex"),
       Buffer.from(encrypted.iv, "hex"));
-  decipher.setAuthTag(Buffer.from(encrypted.tag, "hex"));
 
   let decrypted = decipher.update(encrypted.content, "hex", "utf8");
   decrypted += decipher.final("utf8");
