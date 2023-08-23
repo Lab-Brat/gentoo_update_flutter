@@ -71,7 +71,6 @@ class AESKeyManager {
       final userAESKeyData = {
         'content': response.data['content'],
         'iv': response.data['iv'],
-        'tag': response.data['tag']
       };
 
       return UserAESKey.fromMap(userAESKeyData);
@@ -85,15 +84,13 @@ class AESKeyManager {
 class UserAESKey {
   final String content;
   final String iv;
-  final String tag;
 
-  UserAESKey({required this.content, required this.iv, required this.tag});
+  UserAESKey({required this.content, required this.iv});
 
   factory UserAESKey.fromMap(Map<String, dynamic> data) {
     return UserAESKey(
       content: data['content'] as String,
       iv: data['iv'] as String,
-      tag: data['tag'] as String,
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gentoo_update_flutter/services/auth.dart';
 import 'package:gentoo_update_flutter/services/decrypt.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,22 +9,24 @@ class ProfileScreen extends StatelessWidget {
   final Decryption decrypt = Decryption();
   final AESKeyManager aesKeyManager = AESKeyManager();
 
-  Future<String?> getToken(String uid) async {
+  Future<List<String?>> getTokenInfo(String uid) async {
     DocumentSnapshot document =
         await FirebaseFirestore.instance.collection('tokens').doc(uid).get();
-    return document['token_id'];
+    return [document['token_id'], document['token_id_iv']];
   }
 
   Future<String> getDecryptedToken(String uid) async {
-    String? encryptedTokenId = await getToken(uid);
+    List<String?> tokenInfo = await getTokenInfo(uid);
+    String? encryptedTokenId = tokenInfo[0];
+    String tokenIV = tokenInfo[1] ?? "";
 
     if (encryptedTokenId == null) {
       throw Exception("Token not found");
     }
 
     UserAESKey userAESKey = await AESKeyManager().fetchUserAESKey();
-    return Decryption().decryptWithUserKey(
-        encryptedTokenId, userAESKey.content, userAESKey.iv, userAESKey.tag);
+    return Decryption()
+        .decryptWithUserKey(encryptedTokenId, userAESKey.content, tokenIV);
   }
 
   @override
@@ -46,30 +47,14 @@ class ProfileScreen extends StatelessWidget {
             case 1:
               return FutureBuilder<String>(
                 future: getDecryptedToken(uid),
-                builder: (context, snapshot) {
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
+                    return Text('Error: ${snapshot.error}');
                   } else {
-                    return Row(
-                      children: [
-                        Expanded(child: Text("Your Token: ${snapshot.data}")),
-                        IconButton(
-                          icon: const Icon(Icons.copy),
-                          onPressed: () {
-                            Clipboard.setData(
-                              ClipboardData(text: snapshot.data ?? ''),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Token copied to clipboard'),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    );
+                    return Text('Your Token: ${snapshot.data}');
                   }
                 },
               );
