@@ -1,16 +1,18 @@
+const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 
-const updateFCMToken = async (req, res) => {
+const updateFCMToken = async (data, context) => {
+  console.log("Received data:", data);
+  const idToken = data.idToken;
+  const fcmToken = data.fcmToken;
+
+  if (!idToken || !fcmToken) {
+    throw new functions.https.HttpsError(
+        "invalid-argument",
+        "ID Token and FCM Token are required.");
+  }
+
   try {
-    const idToken = req.body.idToken;
-    const fcmToken = req.body.fcmToken;
-
-    if (!idToken || !fcmToken) {
-      res.status(400).send("ID Token and FCM Token are required.");
-      return;
-    }
-
-    // Verify the ID token first.
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const uid = decodedToken.uid;
 
@@ -21,12 +23,11 @@ const updateFCMToken = async (req, res) => {
       "fcm_token_create_time": admin.firestore.FieldValue.serverTimestamp(),
     }, {merge: true});
 
-    res.status(200).send("FCM token updated successfully.");
+    return {result: "FCM token updated successfully."};
   } catch (error) {
     console.error("Error updating FCM token:", error);
-    res.status(500).send("Internal server error.");
+    throw new functions.https.HttpsError("internal", "Internal server error.");
   }
 };
 
 module.exports = updateFCMToken;
-

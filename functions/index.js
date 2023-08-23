@@ -7,7 +7,7 @@ const addNewUser = require("./src/addNewUser");
 exports.addNewUser = functions.auth.user().onCreate(addNewUser);
 
 const updateFCMToken = require("./src/updateFCMToken");
-exports.updateFCMToken = functions.https.onRequest(updateFCMToken);
+exports.updateFCMToken = functions.https.onCall(updateFCMToken);
 
 const getUserAESKey = require("./src/getUserAESKey");
 exports.getUserAESKey = functions.https.onCall(getUserAESKey);

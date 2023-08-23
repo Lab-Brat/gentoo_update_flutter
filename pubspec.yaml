@@ -21,7 +21,6 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   pointycastle: ^3.7.3
   convert: ^3.1.1
-  http: ^1.1.0
   cloud_functions: ^4.4.0
 
 dev_dependencies:
