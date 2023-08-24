@@ -15,6 +15,8 @@ class AESKeyManager {
 
       final HttpsCallable callable = _functions.httpsCallable('getUserAESKey');
       final response = await callable.call();
+      print("Cloud Function getUserAESKey called!");
+      print("result: $response");
       final userAESKeyData = {
         'content': response.data['content'],
         'iv': response.data['iv'],
@@ -52,7 +54,7 @@ class UserKeyProvider extends ChangeNotifier {
   }
 
   UserKeyProvider._internal();
-  String _userKey = '';
+  String _userKey = 'EMPTY_KEY';
 
   String get userKey => _userKey;
 
