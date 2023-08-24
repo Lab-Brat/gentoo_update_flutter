@@ -27,8 +27,8 @@ class AuthService {
         await sendFcmTokenToServer();
 
         final keyFetcher = ProvideUserAESKey();
-        String? fetchedKey = await keyFetcher.fetchAndUpdateUserKey();
-        if (fetchedKey == null) {
+        bool fetchedKey = await keyFetcher.fetchAndUpdateUserKey();
+        if (fetchedKey == false) {
           logger.e("Failed to fetch the user key.");
           return;
         }

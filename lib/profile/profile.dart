@@ -8,8 +8,9 @@ import 'package:gentoo_update_flutter/shared/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
-  final AuthService authService = AuthService();
-  final Decryption decrypt = Decryption();
+  final authService = AuthService();
+  final decrypt = Decryption();
+  final keyFetcher = ProvideUserAESKey();
 
   Future<List<String?>> getTokenInfo(String uid) async {
     DocumentSnapshot document =
@@ -79,6 +80,23 @@ class ProfileScreen extends StatelessWidget {
                 },
               );
             case 2:
+              FutureBuilder<bool>(
+                future: userKey == 'EMPTY_KEY'
+                    ? keyFetcher.fetchAndUpdateUserKey()
+                    : Future.value(true),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Fetching key...");
+                  } else if (snapshot.hasError) {
+                    return const Text("Error: Key could not be fetched now.");
+                  } else if (snapshot.data == false) {
+                    return const Text("Error: Key could not be fetched now.");
+                  } else {
+                    return const Text("Key Fetched");
+                  }
+                },
+              );
+            case 3:
               return ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.deepPurpleAccent,

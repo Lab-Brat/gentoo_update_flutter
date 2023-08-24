@@ -69,7 +69,7 @@ class ProvideUserAESKey {
   final _aesManager = AESKeyManager();
   final logger = Logger();
 
-  Future<String?> fetchAndUpdateUserKey() async {
+  Future<bool> fetchAndUpdateUserKey() async {
     UserAESKey userKey = await _aesManager.fetchUserAESKey();
     String keyContent = userKey.content;
 
@@ -81,7 +81,7 @@ class ProvideUserAESKey {
 
       if (i == 2 && keyContent == 'EMPTY_KEY') {
         logger.e("Failed to fetch user AES key content after 3 attempts.");
-        return "Error Fetching Key (3 tries)";
+        return false;
       }
 
       await Future.delayed(const Duration(seconds: 1));
@@ -97,6 +97,6 @@ class ProvideUserAESKey {
 
     logger.i("User key fetching and updating completed.");
 
-    return keyContent;
+    return true;
   }
 }
