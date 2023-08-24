@@ -41,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16.0),
-        itemCount: 3,
+        itemCount: 4,
         separatorBuilder: (context, index) => const Divider(),
         itemBuilder: (context, index) {
           switch (index) {
@@ -80,7 +80,7 @@ class ProfileScreen extends StatelessWidget {
                 },
               );
             case 2:
-              FutureBuilder<bool>(
+              return FutureBuilder<bool>(
                 future: userKey == 'EMPTY_KEY'
                     ? keyFetcher.fetchAndUpdateUserKey()
                     : Future.value(true),
