@@ -46,7 +46,7 @@ class ProfileScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           switch (index) {
             case 0:
-              return Text("Your UID: $uid");
+              return ListTile(title: const Text("UID:"), trailing: Text(uid));
             case 1:
               return FutureBuilder<String>(
                 future: getDecryptedToken(uid, userKey),
@@ -59,7 +59,12 @@ class ProfileScreen extends StatelessWidget {
                   } else {
                     return Row(
                       children: <Widget>[
-                        Expanded(child: Text('Your Token: ${snapshot.data}')),
+                        Expanded(
+                          child: ListTile(
+                            title: const Text('Your Token:'),
+                            trailing: Text(snapshot.data ?? "Fetching..."),
+                          ),
+                        ),
                         IconButton(
                           icon: const Icon(Icons.copy, color: Colors.grey),
                           onPressed: () {
@@ -86,16 +91,30 @@ class ProfileScreen extends StatelessWidget {
                     : Future.value(true),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Text("Fetching key...");
-                  } else if (snapshot.hasError) {
-                    return const Text("Error: Key could not be fetched now.");
-                  } else if (snapshot.data == false) {
-                    return const Text("Error: Key could not be fetched now.");
+                    return const ListTile(
+                      title: Text("AES Key Fetched:"),
+                      trailing: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError || snapshot.data == false) {
+                    return const ListTile(
+                      title: Text("AES Key Fetched:"),
+                      trailing: Icon(
+                        Icons.error,
+                        color: Colors.red,
+                      ),
+                    );
                   } else {
-                    return const Text("Key Fetched");
+                    return const ListTile(
+                      title: Text("AES Key Fetched:"),
+                      trailing: Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                      ),
+                    );
                   }
                 },
               );
+
             case 3:
               return ElevatedButton(
                 style: ElevatedButton.styleFrom(
