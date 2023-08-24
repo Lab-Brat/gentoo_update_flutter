@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 class AESKeyManager {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFunctions _functions = FirebaseFunctions.instance;
+  final logger = Logger();
 
   Future<UserAESKey> fetchUserAESKey() async {
     try {
@@ -16,8 +17,8 @@ class AESKeyManager {
 
       final HttpsCallable callable = _functions.httpsCallable('getUserAESKey');
       final response = await callable.call();
-      print("Cloud Function getUserAESKey called!");
-      print("result: $response");
+      logger.i("Cloud Function getUserAESKey called!");
+      logger.i("result: $response");
       final userAESKeyData = {
         'content': response.data['content'],
         'iv': response.data['iv'],
@@ -25,8 +26,8 @@ class AESKeyManager {
 
       return UserAESKey.fromMap(userAESKeyData);
     } catch (e) {
-      print('Error fetching encrypted user AES key: $e');
-      throw e;
+      logger.e('Error fetching encrypted user AES key: $e');
+      rethrow;
     }
   }
 }
@@ -96,7 +97,6 @@ class ProvideUserAESKey {
     provider.updateKey(userKey);
 
     logger.i("User key fetching and updating completed.");
-
     return true;
   }
 }

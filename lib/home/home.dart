@@ -6,11 +6,13 @@ import 'package:gentoo_update_flutter/services/auth.dart';
 import 'package:gentoo_update_flutter/shared/bottom_nav.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   final _pages = [

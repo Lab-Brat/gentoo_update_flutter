@@ -5,13 +5,13 @@ class BottomNavBar extends StatefulWidget {
   final Function(int) onTabTapped;
   final int currentIndex;
 
-  BottomNavBar({required this.onTabTapped, required this.currentIndex});
+  const BottomNavBar({super.key, required this.onTabTapped, required this.currentIndex});
 
   @override
-  _BottomNavBarState createState() => _BottomNavBarState();
+  BottomNavBarState createState() => BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(

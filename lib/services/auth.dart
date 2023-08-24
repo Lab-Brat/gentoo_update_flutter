@@ -48,6 +48,7 @@ class AuthService {
 Future<void> sendFcmTokenToServer() async {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final FirebaseFunctions functions = FirebaseFunctions.instance;
+  final logger = Logger();
 
   try {
     String? fcmToken = await firebaseMessaging.getToken();
@@ -66,11 +67,11 @@ Future<void> sendFcmTokenToServer() async {
     final HttpsCallableResult response = await callable.call(data);
 
     if (response.data['result'] == 'FCM token updated successfully.') {
-      print('FCM token sent to server successfully!');
+      logger.i('FCM token sent to server successfully!');
     } else {
-      print('Failed to send FCM token to server.');
+      logger.e('Failed to send FCM token to server.');
     }
   } catch (e) {
-    print('An error occurred while sending FCM token to server: $e');
+    logger.e('An error occurred while sending FCM token to server: $e');
   }
 }

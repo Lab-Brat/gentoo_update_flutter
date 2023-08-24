@@ -5,12 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:gentoo_update_flutter/shared/provider.dart';
+import 'package:logger/logger.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
   final authService = AuthService();
   final decrypt = Decryption();
   final keyFetcher = ProvideUserAESKey();
+  final logger = Logger();
 
   Future<List<String?>> getTokenInfo(String uid) async {
     DocumentSnapshot document =
@@ -34,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
       return Decryption()
           .decryptWithUserKey(encryptedTokenId, decryptedAESKey, tokenIV);
     } catch (e) {
-      print('Error during decryption: $e');
+      logger.e('Error during decryption: $e');
       return 'Decryption error';
     }
   }

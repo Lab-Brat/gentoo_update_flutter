@@ -3,11 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gentoo_update_flutter/services/auth.dart';
 
 class ReportsScreen extends StatefulWidget {
+  const ReportsScreen({super.key});
+
   @override
-  _ReportsScreenState createState() => _ReportsScreenState();
+  ReportsScreenState createState() => ReportsScreenState();
 }
 
-class _ReportsScreenState extends State<ReportsScreen> {
+class ReportsScreenState extends State<ReportsScreen> {
   final _firestore = FirebaseFirestore.instance;
   final AuthService authService = AuthService();
   late Stream<QuerySnapshot> _reportsStream;
@@ -33,11 +35,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
         stream: _reportsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No reports found.'));
+            return const Center(child: Text('No reports found.'));
           }
 
           return ListView.builder(
@@ -69,13 +71,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
 class ReportDetailScreen extends StatelessWidget {
   final Map<String, dynamic> report;
 
-  ReportDetailScreen({required this.report});
+  const ReportDetailScreen({super.key, required this.report});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Report Detail'),
+        title: const Text('Report Detail'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
