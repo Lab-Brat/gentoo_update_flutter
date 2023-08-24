@@ -34,8 +34,6 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final uid = authService.uid;
     final userKey = Provider.of<UserKeyProvider>(context).userKey;
-    print(userKey);
-    print(uid);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -80,7 +78,6 @@ class ProfileScreen extends StatelessWidget {
                   }
                 },
               );
-
             case 2:
               return ElevatedButton(
                 style: ElevatedButton.styleFrom(

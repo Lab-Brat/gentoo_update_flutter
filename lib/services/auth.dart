@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 class AuthService {
   final userStream = FirebaseAuth.instance.authStateChanges();
   final logger = Logger();
+  final ProvideUserAESKey provideUserAesKey = ProvideUserAESKey();
 
   String get uid {
     return FirebaseAuth.instance.currentUser?.uid ?? "Not Logged In";
@@ -25,30 +26,12 @@ class AuthService {
 
         await sendFcmTokenToServer();
 
-        UserAESKey userKey = await AESKeyManager().fetchUserAESKey();
-        String keyContent = userKey.content;
-
-        for (int i = 0; i < 3; i++) {
-          if (keyContent != 'EMPTY_KEY') {
-            logger.i("Successfully fetched user AES key.");
-            break;
-          }
-
-          if (i == 2 && keyContent == 'EMPTY_KEY') {
-            logger.e("Failed to fetch user AES key content after 3 attempts.");
-            return;
-          }
-
-          await Future.delayed(const Duration(seconds: 1));
-
-          userKey = await AESKeyManager().fetchUserAESKey();
-          keyContent = userKey.content;
+        final keyFetcher = ProvideUserAESKey();
+        String? fetchedKey = await keyFetcher.fetchAndUpdateUserKey();
+        if (fetchedKey == null) {
+          logger.e("Failed to fetch the user key.");
+          return;
         }
-
-        await Future.delayed(const Duration(seconds: 1));
-
-        final provider = UserKeyProvider.instance;
-        provider.updateKey(userKey);
 
         logger.i("Authentication Flow ending for $uid");
       }

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 
 class AESKeyManager {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -61,5 +62,41 @@ class UserKeyProvider extends ChangeNotifier {
   void updateKey(UserAESKey newKey) {
     _userKey = newKey.content;
     notifyListeners();
+  }
+}
+
+class ProvideUserAESKey {
+  final _aesManager = AESKeyManager();
+  final logger = Logger();
+
+  Future<String?> fetchAndUpdateUserKey() async {
+    UserAESKey userKey = await _aesManager.fetchUserAESKey();
+    String keyContent = userKey.content;
+
+    for (int i = 0; i < 3; i++) {
+      if (keyContent != 'EMPTY_KEY') {
+        logger.i("Successfully fetched user AES key.");
+        break;
+      }
+
+      if (i == 2 && keyContent == 'EMPTY_KEY') {
+        logger.e("Failed to fetch user AES key content after 3 attempts.");
+        return "Error Fetching Key (3 tries)";
+      }
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      userKey = await _aesManager.fetchUserAESKey();
+      keyContent = userKey.content;
+    }
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    final provider = UserKeyProvider.instance;
+    provider.updateKey(userKey);
+
+    logger.i("User key fetching and updating completed.");
+
+    return keyContent;
   }
 }
