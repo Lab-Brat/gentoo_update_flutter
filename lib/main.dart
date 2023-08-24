@@ -39,6 +39,7 @@ class _AppState extends State<App> {
             child: MaterialApp(
               routes: appRoutes,
               theme: appTheme,
+              debugShowCheckedModeBanner: false,
             ),
           );
         }
