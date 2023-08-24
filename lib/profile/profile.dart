@@ -19,16 +19,24 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Future<String> getDecryptedToken(String uid, String decryptedAESKey) async {
-    List<String?> tokenInfo = await getTokenInfo(uid);
-    String? encryptedTokenId = tokenInfo[0];
-    String tokenIV = tokenInfo[1] ?? "";
+    try {
+      if (decryptedAESKey == 'EMPTY_KEY') {
+        return '[Token is being prepared...]';
+      }
+      List<String?> tokenInfo = await getTokenInfo(uid);
+      String? encryptedTokenId = tokenInfo[0];
+      String tokenIV = tokenInfo[1] ?? "";
 
-    if (encryptedTokenId == null) {
-      throw Exception("Token not found");
+      if (encryptedTokenId == null) {
+        throw Exception("Token not found");
+      }
+
+      return Decryption()
+          .decryptWithUserKey(encryptedTokenId, decryptedAESKey, tokenIV);
+    } catch (e) {
+      print('Error during decryption: $e');
+      return 'Decryption error';
     }
-
-    return Decryption()
-        .decryptWithUserKey(encryptedTokenId, decryptedAESKey, tokenIV);
   }
 
   @override
