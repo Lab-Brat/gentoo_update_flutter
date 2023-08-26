@@ -28,6 +28,12 @@ jobs:
         run: |
           echo $KEYSTORE_BASE64 | base64 -di > android/upload-keystore.jks 
 
+      - name: 🔑 Create Key Properties
+        env:
+          KEY_PROPERTIES_BASE64: ${{ secrets.KEY_PROPERTIES }}
+        run: |
+          echo $KEY_PROPERTIES_BASE64 | base64 -di > android/key.properties 
+
       - name: 🪺 Update Flutter dependency list
         run: flutter pub get
 
