@@ -1,9 +1,9 @@
-name: Build 🤖 📦 and release apk and aab
+name: 🤖 📦 Build and release packages for Android
 on: push
 
 jobs:
-  build-n-publish:
-    name: Build 🤖 📦
+  build-n-release:
+    name: 🤖 📦 Build and release
     runs-on: ubuntu-latest
 
     steps:
@@ -16,20 +16,38 @@ jobs:
         with:
           flutter-version: '3.10.6'
 
-      - name: Update Flutter dependency list
+      - name: 🔑 Create Google Services JSON File
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          echo $GOOGLE_SERVICES_JSON | base64 -di > ./android/app/google-services.json
+
+      - name: 🔑 Create the Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE }}
+        run: |
+          echo $KEYSTORE_BASE64 | base64 -di > $RUNNER_TEMP/upload.keystore
+
+      - name: 🪺 Update Flutter dependency list
         run: flutter pub get
 
-      - name: Build apk
+      - name: ⚙️ Build apk
         run: flutter build apk
 
-      - name: Build bundle (aab)
+      - name: ⚙️ Build bundle (aab)
+        # if: startsWith(github.ref, 'refs/tags')
         run: flutter build appbundle
 
-      - name: Publish 📦 to PyPI if it's tagged
-        if: startsWith(github.ref, 'refs/tags')
+      - name: 📦 Save APK as artifact
+        # if: startsWith(github.ref, 'refs/tags')
         uses: actions/upload-artifact@v1
         with:
-          name: release-apk
-          path: |
-            build/app/outputs/apk/release/app-release.apk
-            build/app/outputs/bundle/release/app-release.aab
+          name: "gentoo_update-${{  github.ref_name }}.apk"
+          path: build/app/outputs/apk/release/app-release.apk
+
+      - name: 📦 Save Bundle as artifact
+        # if: startsWith(github.ref, 'refs/tags')
+        uses: actions/upload-artifact@v1
+        with:
+          name: "gentoo_update-${{  github.ref_name }}.aab"
+          path: build/app/outputs/bundle/release/app-release.aab
