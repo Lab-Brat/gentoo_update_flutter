@@ -26,7 +26,7 @@ jobs:
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE }}
         run: |
-          echo $KEYSTORE_BASE64 | base64 -di > $RUNNER_TEMP/upload.keystore
+          echo $KEYSTORE_BASE64 | base64 -di > android/upload-keystore.jks 
 
       - name: 🪺 Update Flutter dependency list
         run: flutter pub get
