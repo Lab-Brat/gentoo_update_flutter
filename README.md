@@ -17,6 +17,7 @@ from 2023 Google Summer of Code, more about it can be found in the
   - [x] Reports Screen
   - [x] Profile Screen
   - [ ] Help Screen
+  - [ ] Pop up with token export command
   - [ ] Fix screen transition errors
 - Backend
   - [x] Add security rules for Firestore
